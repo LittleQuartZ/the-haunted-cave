@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser, { DOWN } from "phaser";
 import Enemy from "../ui/Enemy";
 export default class HauntedCaveScene extends Phaser.Scene {
   constructor() {
@@ -186,6 +186,9 @@ export default class HauntedCaveScene extends Phaser.Scene {
       }),
       frameRate: 10,
     });
+    this.keys.attack.on("down", () => {
+      this.playerAttack();
+    });
   }
   update() {
     if (this.platform.x >= 1500) {
@@ -266,5 +269,11 @@ export default class HauntedCaveScene extends Phaser.Scene {
       this.scoreText.setText("score : " + this.score);
     }
   }
-  playerAttack() {}
+  playerAttack() {
+    this.attack.setActive(true).setVisible(true);
+    this.attack.anims.play({
+      key: "attack_claw",
+      hideOnComplete: true,
+    });
+  }
 }
