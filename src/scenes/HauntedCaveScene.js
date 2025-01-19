@@ -17,6 +17,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
     this.player_attacking = false;
     this.keys = {};
     this.damaging = false;
+    this.player_immune = false;
   }
   preload() {
     this.load.image("bg1", "images/background1.png");
@@ -205,8 +206,14 @@ export default class HauntedCaveScene extends Phaser.Scene {
         end: 5,
       }),
       frameRate: 10,
-      repeat: -1,
     });
+    this.physics.add.overlap(
+      this.player,
+      this.enemies,
+      this.playerHit,
+      null,
+      this
+    );
   }
   update() {
     if (this.platform.x >= 1500) {
@@ -298,6 +305,20 @@ export default class HauntedCaveScene extends Phaser.Scene {
       this.player_attacking = true;
       this.time.delayedCall(1000, () => {
         this.player_attacking = false;
+      });
+    }
+  }
+  playerHit(player, enemy) {
+    if (!this.player_immune) {
+      enemy.anims.play("orc-attack");
+      enemy.setOffset(4, 8);
+      this.player_immune = true;
+      this.time.delayedCall(2000, () => {
+        this.player_immune = false;
+      });
+      enemy.once("animationcomplete", () => {
+        enemy.setOffset(0, 0);
+        enemy.anims.play("orc-walk");
       });
     }
   }
