@@ -172,7 +172,12 @@ export default class HauntedCaveScene extends Phaser.Scene {
     this.attack.body.allowGravity = false;
     this.attack.setActive(false).setVisible(false);
 
-    this.keys.SPACE = this.input.keyboard.addKey("SPACE");
+    this.keys = this.input.keyboard.addKeys({
+      left: "A",
+      right: "D",
+      SPACE: "SPACE",
+      attack: "J",
+    });
   }
   update() {
     if (this.platform.x >= 1500) {
@@ -181,12 +186,12 @@ export default class HauntedCaveScene extends Phaser.Scene {
       this.platform.setVelocityX(50);
     }
 
-    if (this.cursors.left.isDown) {
+    if (this.cursors.left.isDown || this.keys.left.isDown) {
       this.player.setVelocityX(-120).setFlipX(true);
       if (this.player.body.touching.down) {
         this.player.anims.play("player-run", true);
       }
-    } else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown || this.keys.right.isDown) {
       this.player.setVelocityX(120).setFlipX(false);
       if (this.player.body.touching.down) {
         this.player.anims.play("player-run", true);
