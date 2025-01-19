@@ -61,6 +61,10 @@ export default class HauntedCaveScene extends Phaser.Scene {
       frameHeight: 33,
       frameWidth: 38,
     });
+    this.load.spritesheet("health-bars", "images/heart-1.png", {
+      frameWidth: 64,
+      frameHeight: 58,
+    });
   }
   create() {
     const gameHalfWidth = this.scale.width / 2;
@@ -214,6 +218,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
       null,
       this
     );
+    this.add.image(200, 100, "health-bars").setScale(1);
   }
   update() {
     if (this.platform.x >= 1500) {
