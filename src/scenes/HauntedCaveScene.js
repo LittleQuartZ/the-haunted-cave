@@ -13,6 +13,9 @@ export default class HauntedCaveScene extends Phaser.Scene {
     this.scoreText = undefined;
     this.player_jumps = 2;
     this.player_jumping = false;
+    this.attack = undefined;
+    this.player_attacking = false;
+    this.keys = {};
   }
   preload() {
     this.load.image("bg1", "images/background1.png");
@@ -47,6 +50,10 @@ export default class HauntedCaveScene extends Phaser.Scene {
     this.load.spritesheet("orc-walk", "images/Orc-Walk.png", {
       frameWidth: 22,
       frameHeight: 15,
+    });
+    this.load.spritesheet("claw", "images/claw_attack.png", {
+      frameWidth: 45,
+      frameHeight: 33,
     });
   }
   create() {
@@ -160,6 +167,12 @@ export default class HauntedCaveScene extends Phaser.Scene {
       fontSize: "18px",
       fontStyle: "bold",
     });
+    this.attack = this.physics.add.sprite(this.player.x, this.player.y, "claw");
+    this.attack.setImmovable(true);
+    this.attack.body.allowGravity = false;
+    this.attack.setActive(false).setVisible(false);
+
+    this.keys.SPACE = this.input.keyboard.addKey("SPACE");
   }
   update() {
     if (this.platform.x >= 1500) {
@@ -191,14 +204,19 @@ export default class HauntedCaveScene extends Phaser.Scene {
 
     if (
       this.player_jumps > 0 &&
-      Phaser.Input.Keyboard.DownDuration(this.cursors.up, 150)
+      (Phaser.Input.Keyboard.DownDuration(this.cursors.up, 150) ||
+        Phaser.Input.Keyboard.DownDuration(this.keys.SPACE, 150))
     ) {
       this.player.setVelocityY(-300);
       //this.player.anims.play("player-jump", true);
       this.sound.play("jump", { volume: 0.01 });
       this.player_jumping = true;
     }
-    if (this.player_jumping && Phaser.Input.Keyboard.JustUp(this.cursors.up)) {
+    if (
+      this.player_jumping &&
+      (Phaser.Input.Keyboard.JustUp(this.cursors.up) ||
+        Phaser.Input.Keyboard.JustUp(this.keys.SPACE))
+    ) {
       this.player_jumps--;
       this.player_jumping = false;
     }
@@ -211,6 +229,10 @@ export default class HauntedCaveScene extends Phaser.Scene {
         // this.sound.play("fall");
       }
     });
+
+    if (this.attack) {
+      this.attack.setPosition(this.player.x + 20, this.player.y);
+    }
   }
   spawnEnemy() {
     const config = {
