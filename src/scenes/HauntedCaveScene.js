@@ -16,6 +16,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
     this.attack = undefined;
     this.player_attacking = false;
     this.keys = {};
+    this.damaging = false;
   }
   preload() {
     this.load.image("bg1", "images/background1.png");
@@ -54,6 +55,10 @@ export default class HauntedCaveScene extends Phaser.Scene {
     this.load.spritesheet("claw", "images/claw_attack.png", {
       frameWidth: 45,
       frameHeight: 33,
+    });
+    this.load.spritesheet("orc-attack", "images/Orc-Attack.png", {
+      frameHeight: 33,
+      frameWidth: 38,
     });
   }
   create() {
@@ -156,13 +161,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
       frameRate: 10,
       repeat: -1,
     });
-    this.physics.add.overlap(
-      this.player,
-      this.enemies,
-      this.attackEnemy,
-      null,
-      this
-    );
+
     this.scoreText = this.add.text(gameHalfWidth, 20, "score : 0", {
       fontSize: "18px",
       fontStyle: "bold",
@@ -184,10 +183,29 @@ export default class HauntedCaveScene extends Phaser.Scene {
         start: 0,
         end: 7,
       }),
-      frameRate: 10,
+      frameRate: 20,
     });
     this.keys.attack.on("down", () => {
       this.playerAttack();
+    });
+    this.physics.add.overlap(
+      this.attack,
+      this.enemies,
+      this.attackEnemy,
+      null,
+      this
+    );
+    this.attack.on("animationcomplete", () => {
+      this.damaging = false;
+    });
+    this.anims.create({
+      key: "orc-attack",
+      frames: this.anims.generateFrameNumbers("orc-attack", {
+        start: 0,
+        end: 5,
+      }),
+      frameRate: 10,
+      repeat: -1,
     });
   }
   update() {
@@ -262,18 +280,25 @@ export default class HauntedCaveScene extends Phaser.Scene {
       enemy.anims.play("orc-walk", true);
     }
   }
-  attackEnemy(player, enemy) {
-    if (player.body.velocity.y !== 0 && player.body.touching.down) {
+  attackEnemy(attack, enemy) {
+    if (this.damaging) {
       enemy.die();
       this.score += 10;
       this.scoreText.setText("score : " + this.score);
     }
   }
   playerAttack() {
-    this.attack.setActive(true).setVisible(true);
-    this.attack.anims.play({
-      key: "attack_claw",
-      hideOnComplete: true,
-    });
+    if (!this.player_attacking) {
+      this.attack.setActive(true).setVisible(true);
+      this.attack.anims.play({
+        key: "attack_claw",
+        hideOnComplete: true,
+      });
+      this.damaging = true;
+      this.player_attacking = true;
+      this.time.delayedCall(1000, () => {
+        this.player_attacking = false;
+      });
+    }
   }
 }
