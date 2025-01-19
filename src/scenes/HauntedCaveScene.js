@@ -178,6 +178,14 @@ export default class HauntedCaveScene extends Phaser.Scene {
       SPACE: "SPACE",
       attack: "J",
     });
+    this.attack.anims.create({
+      key: "attack_claw",
+      frames: this.anims.generateFrameNumbers("claw", {
+        start: 0,
+        end: 7,
+      }),
+      frameRate: 10,
+    });
   }
   update() {
     if (this.platform.x >= 1500) {
@@ -258,4 +266,5 @@ export default class HauntedCaveScene extends Phaser.Scene {
       this.scoreText.setText("score : " + this.score);
     }
   }
+  playerAttack() {}
 }
