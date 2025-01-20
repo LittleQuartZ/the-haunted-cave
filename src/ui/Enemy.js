@@ -21,8 +21,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
   update() {
     this.setVelocityX(this.speed * -1);
 
-    const gameWidth = this.scene.scale.width;
-    if (this.x > gameWidth + 5) {
+    if (this.x < -10) {
       this.die();
     }
   }
