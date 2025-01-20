@@ -19,6 +19,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
     this.damaging = false;
     this.player_immune = false;
     this.health = 3;
+    this.healthIcon = undefined;
   }
   preload() {
     this.load.image("bg1", "images/background1.png");
@@ -219,7 +220,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
       null,
       this
     );
-    this.add.image(200, 100, "health-bars");
+    this.healthIcon = this.add.image(200, 100, "health-bars");
   }
   update() {
     if (this.platform.x >= 1500) {
@@ -325,11 +326,11 @@ export default class HauntedCaveScene extends Phaser.Scene {
       this.player_immune = true;
       this.health--;
       if (this.health == 2) {
-        console.log("nyawa kamu sisa 2");
+        this.healthIcon.setFrame(2);
       } else if (this.health == 1) {
-        console.log("nyawa kamu sisa 1");
+        this.healthIcon.setFrame(3);
       } else if (this.health == 0) {
-        console.log("nyawa kamu habis");
+        this.healthIcon.setFrame(4); // akan diganti dengan kode game over
       }
 
       this.time.delayedCall(2000, () => {
