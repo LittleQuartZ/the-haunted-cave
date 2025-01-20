@@ -1,4 +1,4 @@
-import Phaser, { DOWN } from "phaser";
+import Phaser from "phaser";
 import Enemy from "../ui/Enemy";
 export default class HauntedCaveScene extends Phaser.Scene {
   constructor() {
@@ -18,6 +18,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
     this.keys = {};
     this.damaging = false;
     this.player_immune = false;
+    this.health = 3;
   }
   preload() {
     this.load.image("bg1", "images/background1.png");
@@ -218,7 +219,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
       null,
       this
     );
-    this.add.image(200, 100, "health-bars").setScale(1);
+    this.add.image(200, 100, "health-bars");
   }
   update() {
     if (this.platform.x >= 1500) {
@@ -317,10 +318,21 @@ export default class HauntedCaveScene extends Phaser.Scene {
     if (!this.player_immune) {
       enemy.anims.play("orc-attack");
       enemy.setOffset(4, 8);
+
       this.player_immune = true;
+      this.health--;
+      if (this.health == 2) {
+        console.log("nyawa kamu sisa 2");
+      } else if (this.health == 1) {
+        console.log("nyawa kamu sisa 1");
+      } else if (this.health == 0) {
+        console.log("nyawa kamu habis");
+      }
+
       this.time.delayedCall(2000, () => {
         this.player_immune = false;
       });
+
       enemy.once("animationcomplete", () => {
         enemy.setOffset(0, 0);
         enemy.anims.play("orc-walk");
