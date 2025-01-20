@@ -298,6 +298,9 @@ export default class HauntedCaveScene extends Phaser.Scene {
       enemy.die();
       this.score += 10;
       this.scoreText.setText("score : " + this.score);
+      if (this.score == 200) {
+        this.scene.start("win-scene");
+      }
     }
   }
   playerAttack() {
