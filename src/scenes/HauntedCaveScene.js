@@ -221,6 +221,8 @@ export default class HauntedCaveScene extends Phaser.Scene {
       this
     );
     this.healthIcon = this.add.image(200, 100, "health-bars");
+
+    this.falling_sound = this.sound.add("fall");
   }
   update() {
     if (this.platform.x >= 1500) {
@@ -248,6 +250,10 @@ export default class HauntedCaveScene extends Phaser.Scene {
     if (this.player.body.touching.down) {
       this.player_jumps = 2;
       this.player_jumping = false;
+
+      if (this.falling_sound.isPlaying) {
+        this.falling_sound.stop();
+      }
     }
 
     if (
@@ -258,6 +264,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
       this.player.setVelocityY(-300);
       //this.player.anims.play("player-jump", true);
       this.sound.play("jump", { volume: 0.01 });
+
       this.player_jumping = true;
     }
     if (
@@ -269,14 +276,12 @@ export default class HauntedCaveScene extends Phaser.Scene {
       this.player_jumping = false;
     }
 
-    this.physics.world.on("worldstep", () => {
-      if (this.player.body.velocity.y < 0) {
-        this.player.anims.play("player-jump", true);
-      } else if (this.player.body.velocity.y > 0) {
-        this.player.anims.play("player-fall", true);
-        // this.sound.play("fall");
+    if (this.player.body.velocity.y > 0) {
+      this.player.anims.play("player-fall", true);
+      if (!this.falling_sound.isPlaying) {
+        this.falling_sound.play({ loop: true });
       }
-    });
+    }
 
     if (this.attack) {
       this.attack.setPosition(this.player.x + 20, this.player.y);
