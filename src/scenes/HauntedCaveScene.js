@@ -305,7 +305,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
       this.score += 10;
       this.scoreText.setText("score : " + this.score);
       if (this.score == 200) {
-        this.scene.start("win-scene");
+        this.scene.start("win-scene", { score: this.score });
       }
     }
   }

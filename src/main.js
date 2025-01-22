@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import HauntedCaveScene from "./scenes/HauntedCaveScene";
 import GameOverScene from "./scenes/GameOverScene";
+import WinScene from "./scenes/WinScene";
 
 function loadFont(name, url) {
   var newFont = new FontFace(name, `url(${url})`);
@@ -33,7 +34,7 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [HauntedCaveScene, GameOverScene],
+  scene: [HauntedCaveScene, GameOverScene, WinScene],
 };
 
 export default new Phaser.Game(config);
