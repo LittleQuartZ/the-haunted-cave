@@ -335,7 +335,7 @@ export default class HauntedCaveScene extends Phaser.Scene {
       } else if (this.health == 1) {
         this.healthIcon.setFrame(3);
       } else if (this.health == 0) {
-        this.healthIcon.setFrame(4); // akan diganti dengan kode game over
+        this.scene.start("game-over-scene", { score: this.score });
       }
 
       this.time.delayedCall(2000, () => {
